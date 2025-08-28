@@ -44,32 +44,32 @@
   </table>
 
   <script>
+    const sheetID = '1HLNHZvC2Or7ghb6a8NrIXtzjke8X14c-cTwS_dcMfXA';
+    const sheetName = 'Sheet1'; // or your actual sheet name
+    const url = `https://gsx2json.com/api?id=1HLNHZvC2Or7ghb6a8NrIXtzjke8X14c-cTwS_dcMfXA&sheet=Sheet1`;
 
-  const sheetID = '1HLNHZvC2Or7ghb6a8NrIXtzjke8X14c-cTwS_dcMfXA';
-  const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:csv`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const rows = data.values;
+        const tbody = document.querySelector('#data-table tbody');
+        
+        // Skip header row (index 0)
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          const tr = document.createElement('tr');
 
-  fetch(url)
-    .then(response => response.text())
-    .then(csv => {
-      const rows = csv.trim().split('\n').map(row => row.split(','));
-      const tbody = document.querySelector('#data-table tbody');
-
-      for (let i = 1; i < rows.length; i++) {
-        const row = rows[i];
-        const tr = document.createElement('tr');
-
-        tr.innerHTML = `
-          <td>${row[0]}</td>
-          <td>${row[1]}</td>
-          <td>${row[2]}</td>
-        `;
-        tbody.appendChild(tr);
-      }
-    })
-    .catch(error => {
-      console.error('Error loading CSV:', error);
-    });
-
+          tr.innerHTML = `
+            <td>${row[0]}</td>
+            <td>${row[1]}</td>
+            <td>${row[2]}</td>
+          `;
+          tbody.appendChild(tr);
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching data:', err);
+      });
   </script>
 </body>
 </html>
