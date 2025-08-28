@@ -1,103 +1,75 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Personal Profile</title>
+  <title>Google Sheet Profile Table</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      background: white;
+      font-family: Arial, sans-serif;
       padding: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background: #f2f2f2;
     }
-    .profile-header {
+    h1 {
       text-align: center;
     }
-    .profile-header img {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #007BFF;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
     }
-    .profile-header h1 {
-      margin: 10px 0 5px;
+    th, td {
+      padding: 12px;
+      border: 1px solid #ccc;
+      text-align: left;
     }
-    .profile-header p {
-      color: gray;
-    }
-    .section {
-      margin-top: 30px;
-    }
-    .section h2 {
-      color: #007BFF;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 5px;
-    }
-    ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-    ul li {
-      padding: 5px 0;
-    }
-    .social-links a {
-      margin-right: 10px;
-      text-decoration: none;
-      color: #007BFF;
+    th {
+      background: #007BFF;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="profile-header">
-      <img src="your-photo.jpg" alt="Your Name" />
-      <h1>Your Name</h1>
-      <p>Web Developer | Designer | Tech Enthusiast</p>
-    </div>
+  <h1>My Profile List from Google Sheets</h1>
+  <table id="data-table">
+    <thead>
+      <tr>
+        <th>SN</th>
+        <th>Name</th>
+        <th>Gender</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-    <div class="section">
-      <h2>About Me</h2>
-      <p>Hello! I'm a passionate web developer with experience in front-end and back-end technologies. I love building beautiful, responsive, and user-friendly websites.</p>
-    </div>
+  <script>
 
-    <div class="section">
-      <h2>Contact</h2>
-      <ul>
-        <li>Email: you@example.com</li>
-        <li>Phone: (123) 456-7890</li>
-        <li>Location: Your City, Country</li>
-      </ul>
-    </div>
+  const sheetID = '1HLNHZvC2Or7ghb6a8NrIXtzjke8X14c-cTwS_dcMfXA';
+  const url = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:csv`;
 
-    <div class="section">
-      <h2>Skills</h2>
-      <ul>
-        <li>HTML, CSS, JavaScript</li>
-        <li>React, Vue, Angular</li>
-        <li>Node.js, Express</li>
-        <li>Python, Django</li>
-        <li>Git, GitHub</li>
-      </ul>
-    </div>
+  fetch(url)
+    .then(response => response.text())
+    .then(csv => {
+      const rows = csv.trim().split('\n').map(row => row.split(','));
+      const tbody = document.querySelector('#data-table tbody');
 
-    <div class="section">
-      <h2>Social Links</h2>
-      <div class="social-links">
-        <a href="https://github.com/yourusername" target="_blank">GitHub</a>
-        <a href="https://linkedin.com/in/yourusername" target="_blank">LinkedIn</a>
-        <a href="https://twitter.com/yourusername" target="_blank">Twitter</a>
-      </div>
-    </div>
-  </div>
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const tr = document.createElement('tr');
+
+        tr.innerHTML = `
+          <td>${row[0]}</td>
+          <td>${row[1]}</td>
+          <td>${row[2]}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    })
+    .catch(error => {
+      console.error('Error loading CSV:', error);
+    });
+
+  </script>
 </body>
 </html>
